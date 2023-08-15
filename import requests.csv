@@ -1,0 +1,29 @@
+import requests
+import datetime
+
+def exchange_rates():
+    date = datetime.now().data()
+    last_year = date - datetime.timedelta(days=365)
+
+    API = http://api.exchangeratesapi.io/v1/latest
+    API_KEY = e9b822754f5ef21685692f15b273ff12
+
+    params = {"start": last_year.strftime("%Y-%m-%d"),
+               "end": date.strftime("%Y-%m-%d"),
+               "base": "USD", "currencies": "INR, GBP, JPY"}
+    
+    response = requests.get(API, params = params)
+
+    if response.status.code == 200:
+        data = response.json()
+        rates = data.get("rates", {})
+        print("Date \t INR \t GBP \t JPY")
+        
+        for date, currencies in rates.items():
+            realdate = datetime.strptime(date, "%Y-%m-%d").date().strftime("%Y-%m-%d")
+            INR_rate = currencies.get("INR")
+            GBP_rate = currencies.get("GBP")
+            JPY_rate = currencies.get("JPY")
+            print("{realdate} \t {INR_rate} \t {GBP_rate} \t {JPY_rate}")
+    else:
+        print("Failed to access data")
